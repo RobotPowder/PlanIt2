@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Itinerarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            text-align: left;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+        }
+
+        .primary:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Itinerarios Disponibles</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for itinerario in itinerarios %}
+            <tr>
+                <td>{{ itinerario.nombre }}</td>
+                <td>
+                    <a href="{% url 'visualizarItinerarios:detalles_itinerario' itinerario.id %}">Ver Detalles</a>
+                    <!-- Botón para compartir itinerario -->
+                    <a href="{% url 'compartirItinerario:compartir_itinerario' itinerario.viajero.correo itinerario.id %}">
+                        <button class="primary">Compartir</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Botón para recibir itinerarios -->
+    <a href="{% url 'recibirItinerario:recibir_itinerario' request.user.email %}">
+        <button class="primary">Recibir Itinerarios</button>
+    </a>
+</body>
+
+</html>
+

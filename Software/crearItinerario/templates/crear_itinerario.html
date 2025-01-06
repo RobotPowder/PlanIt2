@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Itinerario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        fieldset {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        legend {
+            font-weight: bold;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+        }
+        select, input {
+            margin-top: 5px;
+            width: 100%;
+            max-width: 400px;
+            padding: 5px;
+        }
+        .actividad-container {
+            margin-bottom: 10px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        // Generar horarios dinámicamente
+        const horarios = [];
+        for (let h = 8; h < 24; h++) {
+            const start = `${h.toString().padStart(2, '0')}:00`;
+            const end = `${(h + 1).toString().padStart(2, '0')}:00`;
+            horarios.push(`${start}-${end}`);
+        }
+
+        // Agregar actividad dinámicamente
+        function agregarActividad(dia) {
+            const contenedor = document.getElementById(`actividades-${dia}`);
+            const nuevaActividad = document.createElement('div');
+            nuevaActividad.classList.add('actividad-container');
+            nuevaActividad.innerHTML = `
+                <label>Horario:</label>
+                <select name="horario_${dia}[]">
+                    ${horarios.map(horario => `<option value="${horario}">${horario}</option>`).join('')}
+                </select>
+                <label>Actividad:</label>
+                <input type="text" name="actividad_${dia}[]" placeholder="Descripción de la actividad">
+                <label>Destino:</label>
+                <select name="destino_${dia}[]">
+                    {% for destino in destinos %}
+                        <option value="{{ destino.id }}">{{ destino.ciudad }} - {{ destino.pais }}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="dia_${dia}[]" value="${dia}"> <!-- Agregar el día como un campo oculto -->
+                <button type="button" onclick="this.parentElement.remove()">Eliminar</button>
+            `;
+
+            contenedor.appendChild(nuevaActividad);
+        }
+    </script>
+</head>
+<body>
+    <h1>Crear Itinerario</h1>
+    <form method="POST" action="{% url 'crearItinerario:crear_itinerario' %}">
+        {% csrf_token %}
+
+        <label for="nombre">Nombre del Itinerario:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required><br><br>
+
+        <h3>Actividades por Día</h3>
+        {% for dia, dia_num in dias.items %}
+            <fieldset>
+                <legend>{{ dia }}</legend>
+
+                <div id="actividades-{{ dia_num }}">
+                    <!-- Contenedor dinámico de actividades -->
+                </div>
+
+                <button type="button" onclick="agregarActividad('{{ dia_num }}')">Agregar Actividad</button>
+            </fieldset>
+        {% endfor %}
+
+        <button type="submit">Crear Itinerario</button>
+    </form>
+</body>
+</html>

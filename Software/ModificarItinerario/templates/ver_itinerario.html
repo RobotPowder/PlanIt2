@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades por Día</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Nombre y fecha del itinerario -->
+    <h1>Itinerario: {{ itinerario.nombre }}</h1>
+    <p>Fecha: {{ itinerario.fecha }}</p>
+
+    <h2>Actividades:</h2>
+    <!-- Tabla para mostrar las actividades por día -->
+    <table>
+        <thead>
+            <tr>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sábado</th>
+                <th>Domingo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for i in dias_semana %}
+                    <td>
+                        {% for actividad in actividades %}
+                            {% if actividad.dia == i %}
+                                <p>
+                                    <strong>Horario:</strong> {{ actividad.horario_inicio }} - {{ actividad.horario_fin }} <br>
+                                    <strong>Nombre:</strong> {{ actividad.nombre }} <br>
+                                    <strong>Destino:</strong> {{ actividad.destino.ciudad }}, {{ actividad.destino.pais }} <br>
+                                    <a href="{% url 'ModificarItinerario:modificar_actividad' actividad.id %}">Modificar</a> 
+                                    <a href="{% url 'ModificarItinerario:eliminar_actividad' actividad.id %}">Eliminar</a>
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Opción para agregar una nueva actividad al itinerario -->
+    <a href="{% url 'ModificarItinerario:agregar_actividad' itinerario.id %}">
+        <button type="button">Agregar actividad</button>
+    </a>
+    <a href="{% url 'visualizarItinerarios:detalles_itinerario' itinerario.id %}">
+        <button type="button">Volver</button>
+    </a>
+</body>
+</html>
