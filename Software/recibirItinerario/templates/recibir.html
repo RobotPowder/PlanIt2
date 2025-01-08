@@ -32,16 +32,16 @@
                             <td>{{ itinerario.emisor }}</td>
                             <td>
                                 <!-- Botón Aceptar -->
-                                <button type="submit" name="accion" value="aceptar" onclick="this.form.itinerario_id.value='{{ itinerario.id }}'">Aceptar</button>
+                                <button type="submit" name="accion" value="aceptar" onclick="document.getElementById('itinerario_id').value='{{ itinerario.id }}'">Aceptar</button>
                                 <!-- Botón Rechazar -->
-                                <button type="submit" name="accion" value="rechazar" onclick="this.form.itinerario_id.value='{{ itinerario.id }}'">Rechazar</button>
+                                <button type="submit" name="accion" value="rechazar" onclick="document.getElementById('itinerario_id').value='{{ itinerario.id }}'">Rechazar</button>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
             <!-- Campo oculto para el ID del itinerario -->
-            <input type="hidden" name="itinerario_id" value="">
+            <input type="hidden" id="itinerario_id" name="itinerario_id" value="">
         </form>
     {% else %}
         <p>No tienes itinerarios compartidos.</p>
